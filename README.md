@@ -1,60 +1,69 @@
-# NPR Proof Assistant
+# React + TypeScript + Vite
 
-An interactive proof assistant for Neo-Peircean Relations (NPR) - a graphical syntax for first-order logic.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Overview
+Currently, two official plugins are available:
 
-NPR Proof Assistant is a web-based tool that treats string diagrams as the primary syntax for logical formulas, not just visualizations. It provides two distinct modes:
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-- **Formula Building Mode**: Create NPR formulas through intuitive drag-and-drop interactions
-- **Proof Mode**: Transform formulas using valid NPR axioms with visual feedback
+## Expanding the ESLint configuration
 
-## Features
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-- 🎨 Pure visual interaction - no text representation of formulas
-- 🧩 Dual modes for formula construction and proof manipulation  
-- 🎮 Designed to feel like a fidget toy - fun to use even when not proving
-- 💾 Local-first architecture - works offline, no accounts needed
-- 🔌 Embeddable as a web component in any page
+```js
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-## Development Status
+      // Remove tseslint.configs.recommended and replace with this
+      ...tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      ...tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      ...tseslint.configs.stylisticTypeChecked,
 
-🚧 **Under Development** - This project is in early stages of implementation.
-
-## Tech Stack
-
-- TypeScript
-- Vite
-- Graph visualization library (TBD: Cytoscape.js or Sigma.js)
-- Web Components for embedding
-
-## Getting Started
-
-```bash
-# Clone the repository
-git clone https://github.com/AHartNtkn/npr-proof-assistant.git
-cd npr-proof-assistant
-
-# Install dependencies (once package.json is set up)
-npm install
-
-# Start development server
-npm run dev
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-## Documentation
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-- [Product Requirements](.claude/prds/proof-assistant.md)
-- [Technical Epic](.claude/epics/proof-assistant/epic.md)
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-## Reference
-
-Based on "The calculus of neo-Peircean relations" paper. The proof assistant implements the NPR axiom system described in the paper, providing an interactive environment for exploring this alternative syntax for first-order logic.
-
-## License
-
-MIT
-
-## Contributing
-
-This project is in early development. Contributions and feedback are welcome!
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
