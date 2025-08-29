@@ -58,3 +58,7 @@ dist-ssr
 
 # Optional eslint cache
 .eslintcache
+
+# ArXiv folder
+arXiv-2505.05306v2/
+/arXiv-2505.05306v2
