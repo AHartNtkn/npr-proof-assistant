@@ -62,3 +62,7 @@ dist-ssr
 # ArXiv folder
 arXiv-2505.05306v2/
 /arXiv-2505.05306v2
+
+# Claude workflow directories
+rules/
+scripts/
