@@ -1,9 +1,9 @@
 ---
 name: proof-assistant
-status: backlog
+status: in-progress
 created: 2025-08-29T20:08:09Z
-updated: 2025-08-29T20:22:17Z
-progress: 0%
+updated: 2025-08-29T23:09:48Z
+progress: 13%
 prd: .claude/prds/proof-assistant.md
 github: https://github.com/AHartNtkn/npr-proof-assistant/issues/12
 ---
