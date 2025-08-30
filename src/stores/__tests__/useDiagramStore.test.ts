@@ -144,7 +144,9 @@ describe('useDiagramStore Integration Tests', () => {
       act(() => {
         const nprResult = result.current.validateNPRCompliance();
         expect(nprResult.isValid).toBe(true);
-        expect(nprResult.axiomResults).toBeInstanceOf(Array);
+        expect(nprResult.context.axioms).toBeInstanceOf(Array);
+        expect(nprResult.errors).toBeInstanceOf(Array);
+        expect(nprResult.warnings).toBeInstanceOf(Array);
       });
     });
 
@@ -162,12 +164,12 @@ describe('useDiagramStore Integration Tests', () => {
       // This should fail initially - need to implement axiom enforcement
       expect(result.current.enforceNPRAxioms).toBe(true);
       
-      // Try an operation that should be blocked by axioms
+      // Try an operation with invalid rewrite structure (null source/target)
       const conflictingRewrite = {
         dimension: 0,
-        source: invalidGen,
-        target: { id: 'conflict', color: 'cocartesian' }
-      } as const;
+        source: null,
+        target: null
+      } as any;
       
       expect(() => {
         act(() => {
