@@ -1,3 +1,4 @@
+// App-level types
 export type AppMode = 'formula' | 'proof';
 
 export interface AppState {
@@ -11,23 +12,48 @@ export interface ModeActions {
   toggleMode: () => void;
 }
 
-export interface GraphNode {
-  id: string;
-  x: number;
-  y: number;
-  type: string;
+// Re-export core diagram types and utilities
+export type { Generator, Diagram, Diagram0, DiagramN } from './diagram';
+export { 
+  isValidGenerator, 
+  isValidDiagram, 
+  createEmptyDiagram, 
+  createGeneratorDiagram 
+} from './diagram';
+
+// Re-export rewrite types and utilities  
+export type { Rewrite, Rewrite0, RewriteI, RewriteN, Cospan, Cone } from './rewrite';
+export {
+  isValidRewrite,
+  isValidCospan, 
+  isValidCone,
+  createGeneratorRewrite,
+  createIdentityRewrite,
+  createCospanRewrite
+} from './rewrite';
+
+// Re-export NPR validation types and functions
+export type { NPRAxiom, NPRValidationError, NPRValidationContext, NPRAspectsResult } from './npr';
+export {
+  isNPRCompliant,
+  validateNPRAspects,
+  getNPRAxioms,
+  checkCartesianProperties,
+  checkCocartesianProperties,
+  validateDiagramComposition,
+  createNPRValidationContext
+} from './npr';
+
+// UI interaction types
+export interface SelectionState {
+  selectedDiagram: Diagram | null;
+  selectedSlice: number | null;
+  hoveredRewrite: Rewrite | null;
 }
 
-export interface GraphEdge {
-  id: string;
-  source: string;
-  target: string;
-  type: string;
-}
-
-export interface GraphState {
-  nodes: GraphNode[];
-  edges: GraphEdge[];
-  selectedNode: string | null;
-  selectedEdge: string | null;
+// Store state for diagram management
+export interface DiagramState {
+  currentDiagram: Diagram | null;
+  history: Diagram[];
+  selection: SelectionState;
 }
