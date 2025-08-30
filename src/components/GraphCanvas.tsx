@@ -1,12 +1,15 @@
 import { useEffect, useRef } from 'react';
 import * as PIXI from 'pixi.js';
 import { useModeStore } from '../stores/useModeStore';
+import { useDiagramStore } from '../stores/useDiagramStore';
+import type { Diagram0, DiagramN } from '../types';
 
 export function GraphCanvas() {
   const containerRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<PIXI.Application | null>(null);
   const mode = useModeStore((state) => state.mode);
   const transitioning = useModeStore((state) => state.transitioning);
+  const currentDiagram = useDiagramStore((state) => state.currentDiagram);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -63,6 +66,23 @@ export function GraphCanvas() {
       modeText.alpha = 0.3;
       
       app.stage.addChild(modeText);
+      
+      // Add diagram info text
+      const diagramStyle = new PIXI.TextStyle({
+        fontFamily: 'monospace',
+        fontSize: 14,
+        fill: 0x888888,
+        align: 'left',
+      });
+      
+      const diagramText = new PIXI.Text(
+        'Ready for zigzag diagrams',
+        diagramStyle
+      );
+      diagramText.x = 10;
+      diagramText.y = 10;
+      
+      app.stage.addChild(diagramText);
     });
 
     // Handle window resize
@@ -92,15 +112,36 @@ export function GraphCanvas() {
       appRef.current.renderer.background.color = bgColor;
       
       // Update mode text
-      const modeText = appRef.current.stage.children.find(
+      const texts = appRef.current.stage.children.filter(
         child => child instanceof PIXI.Text
-      ) as PIXI.Text;
+      ) as PIXI.Text[];
       
-      if (modeText) {
-        modeText.text = `${mode === 'formula' ? 'Formula' : 'Proof'} Mode`;
+      if (texts[0]) {
+        texts[0].text = `${mode === 'formula' ? 'Formula' : 'Proof'} Mode`;
       }
     }
   }, [mode]);
+  
+  // Update diagram visualization
+  useEffect(() => {
+    if (appRef.current && currentDiagram) {
+      const texts = appRef.current.stage.children.filter(
+        child => child instanceof PIXI.Text
+      ) as PIXI.Text[];
+      
+      if (texts[1]) {
+        // Display diagram info
+        const isDiagram0 = currentDiagram.dimension === 0;
+        if (isDiagram0) {
+          const d0 = currentDiagram as Diagram0;
+          texts[1].text = `Diagram: 0-dim | Generator: ${d0.generator.label || d0.generator.id}${d0.generator.color ? ` (${d0.generator.color})` : ''}`;
+        } else {
+          const dN = currentDiagram as DiagramN;
+          texts[1].text = `Diagram: ${dN.dimension}-dim | Cospans: ${dN.cospans.length}`;
+        }
+      }
+    }
+  }, [currentDiagram]);
 
   return (
     <div 

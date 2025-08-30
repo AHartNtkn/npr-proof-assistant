@@ -218,17 +218,17 @@ export function encodeCone(cone: Cone): Uint8Array {
 export function encodeWithHeader(data: Generator | Diagram | Rewrite | Cospan | Cone): Uint8Array {
   let encodedData: Uint8Array;
   
-  if ('generator' in data || 'dimension' in data) {
-    // It's a Diagram
+  if ('generator' in data || ('dimension' in data && ('generator' in data || 'source' in data) && !('target' in data))) {
+    // It's a Diagram (has dimension and either generator or source, but not target)
     encodedData = encodeDiagram(data as Diagram);
-  } else if ('source' in data && 'target' in data && 'cones' in data === false) {
-    // It's a Rewrite0
-    encodedData = encodeRewrite(data as Rewrite);
   } else if ('identity' in data) {
     // It's a RewriteI
     encodedData = encodeRewrite(data as Rewrite);
   } else if ('cones' in data) {
     // It's a RewriteN
+    encodedData = encodeRewrite(data as Rewrite);
+  } else if ('source' in data && 'target' in data && !('forward' in data)) {
+    // It's a Rewrite0
     encodedData = encodeRewrite(data as Rewrite);
   } else if ('forward' in data && 'backward' in data) {
     // It's a Cospan
